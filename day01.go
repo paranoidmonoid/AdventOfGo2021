@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"log"
-	"os"
 	"strconv"
 )
 
@@ -13,7 +11,7 @@ func main() {
 		log.Fatalf("readLines: %s", err)
 	}
 	result := 0
-	for i := 0; i < len(lines) - 1; i++ {
+	for i := 0; i < len(lines)-1; i++ {
 		current, _ := strconv.Atoi(lines[i])
 		next, _ := strconv.Atoi(lines[i+1])
 		if current < next {
@@ -21,7 +19,7 @@ func main() {
 		}
 	}
 	resultThree := 0
-	for i := 0; i < len(lines) - 3; i++ {
+	for i := 0; i < len(lines)-3; i++ {
 		first, _ := strconv.Atoi(lines[i])
 		second, _ := strconv.Atoi(lines[i+1])
 		third, _ := strconv.Atoi(lines[i+2])
@@ -34,21 +32,3 @@ func main() {
 	println(result)
 	println(resultThree)
 }
-
-
-// stackoverflow copypaste
-func readLines(path string) ([]string, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines, scanner.Err()
-}
-
-
