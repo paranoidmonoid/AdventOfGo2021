@@ -11,8 +11,8 @@ func main() {
 	println(calculateRisk(layout))
 
 	lowestPoints := findLowestPoints(layout)
-	basinsSizes := dfsBasinsSize(layout, lowestPoints)
-	sort.Ints(basinsSizes)
+	basinsSizes := bfsBasinsSize(layout, lowestPoints)
+	sort.Sort(sort.Reverse(sort.IntSlice(basinsSizes)))
 	println(basinsSizes[0] * basinsSizes[1] * basinsSizes[2])
 
 }
@@ -102,7 +102,7 @@ func findLowestPoints(layout [][]int) [][]int {
 	return lowestPoints
 }
 
-func dfsBasinsSize(layout [][]int, lowestPoints [][]int) []int {
+func bfsBasinsSize(layout [][]int, lowestPoints [][]int) []int {
 	visited := make([][]bool, len(layout))
 	for i := range visited {
 		visited[i] = make([]bool, len(layout[0]))
@@ -112,7 +112,8 @@ func dfsBasinsSize(layout [][]int, lowestPoints [][]int) []int {
 		var queue [][]int
 		queue = append(queue, lowestPoint)
 		currentResult := 0
-		for _, point := range queue {
+		for len(queue) > 0 {
+			point := queue[0]
 			i := point[0]
 			j := point[1]
 			if !visited[i][j] {
@@ -129,9 +130,9 @@ func dfsBasinsSize(layout [][]int, lowestPoints [][]int) []int {
 					queue = append(queue, []int{i, j + 1})
 				}
 				visited[i][j] = true
-				currentResult += layout[i][j]
-				queue = queue[1:]
+				currentResult++
 			}
+			queue = queue[1:]
 		}
 		results = append(results, currentResult)
 	}
