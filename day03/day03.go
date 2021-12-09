@@ -1,12 +1,16 @@
 package main
 
-import "strconv"
+import (
+	"bufio"
+	"os"
+	"strconv"
+)
 
-//func main() {
-//	lines, _ := readLines("day03.txt")
-//	firstPart03(lines)
-//	secondPart03(lines)
-//}
+func main() {
+	lines, _ := readLines("day03/day03.txt")
+	firstPart03(lines)
+	secondPart03(lines)
+}
 
 func secondPart03(lines []string) {
 	resultMostCommon := findMostCommon(lines)
@@ -103,4 +107,19 @@ func firstPart03(lines []string) {
 	gamma, _ := strconv.ParseInt(resultGamma, 2, 64)
 	epsilon, _ := strconv.ParseInt(resultEpsilon, 2, 64)
 	println(gamma * epsilon)
+}
+
+// stackoverflow copypaste
+func readLines(path string) ([]string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
 }

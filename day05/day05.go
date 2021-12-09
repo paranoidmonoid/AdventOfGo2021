@@ -14,7 +14,7 @@ func main() {
 }
 
 func parseInput() [][]int {
-	file, _ := os.Open("C:\\Users\\kotat\\GolandProjects\\AdventOfGo2021\\day05\\day05.txt")
+	file, _ := os.Open("day05/day05.txt")
 	var coordinates [][]int
 	re := regexp.MustCompile("(,| -> )")
 	scanner := bufio.NewScanner(file)

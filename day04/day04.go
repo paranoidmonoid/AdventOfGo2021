@@ -10,7 +10,7 @@ import (
 
 func main() {
 	numbers, bingos := parseInput()
-	//println(play(numbers, bingos))
+	println(play(numbers, bingos))
 	println(playlong(numbers, bingos))
 }
 
@@ -88,7 +88,7 @@ func checkBingo(bingo [][]int, v int, h int) bool {
 }
 
 func parseInput() ([]int, [][][]int) {
-	file, _ := os.Open("day04.txt")
+	file, _ := os.Open("day04/day04.txt")
 	scanner := bufio.NewScanner(file)
 	scanner.Scan()
 	numbersStr := strings.Split(scanner.Text(), ",")
