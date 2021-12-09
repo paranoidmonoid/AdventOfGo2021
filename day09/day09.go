@@ -3,11 +3,18 @@ package main
 import (
 	"bufio"
 	"os"
+	"sort"
 )
 
 func main() {
 	layout := readCavesLayout()
 	println(calculateRisk(layout))
+
+	lowestPoints := findLowestPoints(layout)
+	basinsSizes := dfsBasinsSize(layout, lowestPoints)
+	sort.Ints(basinsSizes)
+	println(basinsSizes[0] * basinsSizes[1] * basinsSizes[2])
+
 }
 
 func readCavesLayout() [][]int {
@@ -57,4 +64,76 @@ func calculateRisk(layout [][]int) int {
 		}
 	}
 	return risk
+}
+
+func findLowestPoints(layout [][]int) [][]int {
+	var lowestPoints [][]int
+	for i := 0; i < len(layout); i++ {
+		for j := 0; j < len(layout[0]); j++ {
+			// current element: (i, j)
+			// neighbours: (i+1, j), (i-1, j), (i, j+1), (i, j-1)
+			current := layout[i][j]
+			var neighbours []int
+			if i != 0 {
+				neighbours = append(neighbours, layout[i-1][j])
+			}
+			if j != 0 {
+				neighbours = append(neighbours, layout[i][j-1])
+			}
+			if i != len(layout)-1 {
+				neighbours = append(neighbours, layout[i+1][j])
+			}
+			if j != len(layout[0])-1 {
+				neighbours = append(neighbours, layout[i][j+1])
+			}
+			isLowest := true
+			for _, neighbour := range neighbours {
+				if current >= neighbour {
+					isLowest = false
+					break
+				}
+			}
+			if isLowest {
+				point := []int{i, j}
+				lowestPoints = append(lowestPoints, point)
+			}
+		}
+	}
+	return lowestPoints
+}
+
+func dfsBasinsSize(layout [][]int, lowestPoints [][]int) []int {
+	visited := make([][]bool, len(layout))
+	for i := range visited {
+		visited[i] = make([]bool, len(layout[0]))
+	}
+	var results []int
+	for _, lowestPoint := range lowestPoints {
+		var queue [][]int
+		queue = append(queue, lowestPoint)
+		currentResult := 0
+		for _, point := range queue {
+			i := point[0]
+			j := point[1]
+			if !visited[i][j] {
+				if i != 0 && layout[i-1][j] > layout[i][j] && layout[i-1][j] != 9 {
+					queue = append(queue, []int{i - 1, j})
+				}
+				if j != 0 && layout[i][j-1] > layout[i][j] && layout[i][j-1] != 9 {
+					queue = append(queue, []int{i, j - 1})
+				}
+				if i != len(layout)-1 && layout[i+1][j] > layout[i][j] && layout[i+1][j] != 9 {
+					queue = append(queue, []int{i + 1, j})
+				}
+				if j != len(layout[0])-1 && layout[i][j+1] > layout[i][j] && layout[i][j+1] != 9 {
+					queue = append(queue, []int{i, j + 1})
+				}
+				visited[i][j] = true
+				currentResult += layout[i][j]
+				queue = queue[1:]
+			}
+		}
+		results = append(results, currentResult)
+	}
+	return results
 }
